@@ -1,30 +1,72 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Register from "./pages/Register";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import LeetcodeDashboard from "./pages/LeetcodeDashboard";
+import CodeforcesDashboard from "./pages/CodeforcesDashboard";
+import CodechefDashboard from "./pages/CodechefDashboard";
+
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
 
   return (
 
-    <BrowserRouter>
+    <Router>
 
       <Routes>
 
-        {/* Default landing page */}
-        <Route path="/" element={<Navigate to="/register" />} />
+        {/* Default Route */}
+        <Route path="/" element={<Login />} />
 
-        <Route path="/register" element={<Register />} />
+        {/* Public Routes */}
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/register" element={<Register />} />
+
+        {/* Protected Routes */}
+
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/leetcode"
+          element={
+            <ProtectedRoute>
+              <LeetcodeDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/codeforces"
+          element={
+            <ProtectedRoute>
+              <CodeforcesDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/codechef"
+          element={
+            <ProtectedRoute>
+              <CodechefDashboard />
+            </ProtectedRoute>
+          }
+        />
 
       </Routes>
 
-    </BrowserRouter>
+    </Router>
 
   );
-
 }
 
 export default App;
