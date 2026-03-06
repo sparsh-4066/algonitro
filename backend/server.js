@@ -4,7 +4,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import leetcodeRoutes from "./routes/leetcodeRoutes.js";
-import authRoutes from "./routes/authRoutes.js";   // ADD THIS
+import codeforcesRoutes from "./routes/codeforcesRoutes.js"; // ADDED
+import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
 
@@ -15,8 +16,9 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use("/api/auth", authRoutes);        // ADD THIS
+app.use("/api/auth", authRoutes);
 app.use("/api/leetcode", leetcodeRoutes);
+app.use("/api/codeforces", codeforcesRoutes); // ADDED
 
 // Test Route
 app.get("/", (req, res) => {
