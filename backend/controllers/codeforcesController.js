@@ -6,19 +6,13 @@ export const getCodeforcesStats = async (req, res) => {
 
   try {
 
-    /* API CALLS */
+    /* API CALLS (PARALLEL FOR SPEED) */
 
-    const userInfo = await axios.get(
-      `https://codeforces.com/api/user.info?handles=${username}`
-    );
-
-    const submissions = await axios.get(
-      `https://codeforces.com/api/user.status?handle=${username}`
-    );
-
-    const ratingHistory = await axios.get(
-      `https://codeforces.com/api/user.rating?handle=${username}`
-    );
+    const [userInfo, submissions, ratingHistory] = await Promise.all([
+      axios.get(`https://codeforces.com/api/user.info?handles=${username}`),
+      axios.get(`https://codeforces.com/api/user.status?handle=${username}`),
+      axios.get(`https://codeforces.com/api/user.rating?handle=${username}`)
+    ]);
 
     const user = userInfo.data.result[0];
     const subs = submissions.data.result;
@@ -113,7 +107,7 @@ export const getCodeforcesStats = async (req, res) => {
 
   } catch (error) {
 
-    console.error(error);
+    console.error("Codeforces API Error:", error.message);
 
     res.status(500).json({
       message: "Failed to fetch Codeforces stats"
