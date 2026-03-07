@@ -4,7 +4,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import leetcodeRoutes from "./routes/leetcodeRoutes.js";
-import codeforcesRoutes from "./routes/codeforcesRoutes.js"; // ADDED
+import codeforcesRoutes from "./routes/codeforcesRoutes.js";
+import codechefRoutes from "./routes/codechefRoutes.js";   // ✅ NEW
 import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
@@ -18,11 +19,12 @@ app.use(express.json());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/leetcode", leetcodeRoutes);
-app.use("/api/codeforces", codeforcesRoutes); // ADDED
+app.use("/api/codeforces", codeforcesRoutes);
+app.use("/api/codechef", codechefRoutes);   // ✅ NEW
 
 // Test Route
 app.get("/", (req, res) => {
-  res.send("AlgoNitro API Running");
+  res.send("AlgoNitro API Running 🚀");
 });
 
 // MongoDB Connection
