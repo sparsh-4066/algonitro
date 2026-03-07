@@ -1,6 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
+import { motion } from "framer-motion";
+import { FaSpinner } from "react-icons/fa";
 
 import {
   LineChart,
@@ -24,8 +26,11 @@ function CodeforcesDashboard() {
   const [data, setData] = useState(null);
   const [ratingHistory, setRatingHistory] = useState([]);
   const [heatmapData, setHeatmapData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const fetchStats = async () => {
+
+    setLoading(true);
 
     try {
 
@@ -37,16 +42,12 @@ function CodeforcesDashboard() {
 
       setData(stats);
 
-      /* RATING HISTORY */
-
       const history = stats.ratingHistory.map((c) => ({
         contest: c.contestName,
         rating: c.newRating
       }));
 
       setRatingHistory(history);
-
-      /* HEATMAP */
 
       const heatmap = Object.keys(stats.heatmap).map((date) => ({
         date,
@@ -59,11 +60,13 @@ function CodeforcesDashboard() {
 
       alert("Failed to fetch Codeforces stats");
 
+    } finally {
+
+      setLoading(false);
+
     }
 
   };
-
-  /* PIE CHART DATA */
 
   const pieData = data
     ? [
@@ -81,97 +84,159 @@ function CodeforcesDashboard() {
     <div
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg,#0f0f0f,#1a1a1a)",
-        color: "white"
+        background: "linear-gradient(135deg,#0b0b0b,#141414)",
+        color: "white",
+        position: "relative",
+        overflow: "hidden"
       }}
     >
 
+      {/* BACKGROUND GLOW */}
+
+      <motion.div
+        animate={{ x:[0,250,0], y:[0,200,0] }}
+        transition={{ duration:12, repeat:Infinity }}
+        style={{
+          position:"absolute",
+          width:"900px",
+          height:"900px",
+          background:"#1F8ACB22",
+          filter:"blur(200px)",
+          top:"-200px",
+          left:"-300px"
+        }}
+      />
+
+      <motion.div
+        animate={{ x:[0,-250,0], y:[0,150,0] }}
+        transition={{ duration:14, repeat:Infinity }}
+        style={{
+          position:"absolute",
+          width:"800px",
+          height:"800px",
+          background:"#36a2eb22",
+          filter:"blur(200px)",
+          bottom:"-200px",
+          right:"-200px"
+        }}
+      />
+
       <Navbar />
 
-      <div style={{ padding: "60px 80px" }}>
+      <div style={{ padding:"60px 80px", position:"relative", zIndex:2 }}>
 
-        <h1 style={{ fontSize: "48px", fontWeight: "bold" }}>
-          Codeforces Analytics
-        </h1>
+        {/* HEADER */}
 
-        {/* USERNAME INPUT */}
+        <div style={{ textAlign:"center", marginBottom:"60px" }}>
 
-        <div style={{ marginTop: "30px", marginBottom: "40px" }}>
+          <h1 style={{ fontSize:"52px", fontWeight:"bold" }}>
+            Codeforces Analytics
+          </h1>
 
-          <input
-            placeholder="Enter Codeforces Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            style={{
-              padding: "12px",
-              width: "260px",
-              marginRight: "10px",
-              borderRadius: "6px"
-            }}
-          />
-
-          <button
-            onClick={fetchStats}
-            style={{
-              padding: "12px 20px",
-              background: "#1F8ACB",
-              border: "none",
-              borderRadius: "6px",
-              fontWeight: "bold",
-              cursor: "pointer"
-            }}
-          >
-            Fetch Stats
-          </button>
+          <p style={{ color:"#aaa", marginTop:"10px" }}>
+            Analyze Codeforces performance with rating insights
+          </p>
 
         </div>
+
+
+        {/* SEARCH */}
+
+        <div
+          style={{
+            display:"flex",
+            justifyContent:"center",
+            marginBottom:"70px"
+          }}
+        >
+
+          <div>
+
+            <input
+              placeholder="Enter Codeforces Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              style={{
+                padding:"12px",
+                width:"260px",
+                marginRight:"10px",
+                borderRadius:"6px",
+                border:"none"
+              }}
+            />
+
+            <button
+              onClick={fetchStats}
+              disabled={loading}
+              style={{
+                padding:"12px 22px",
+                background:"#1F8ACB",
+                border:"none",
+                borderRadius:"6px",
+                fontWeight:"bold",
+                cursor:"pointer"
+              }}
+            >
+
+              {loading ? (
+                <FaSpinner style={{ animation:"spin 1s linear infinite" }} />
+              ) : (
+                "Fetch Stats"
+              )}
+
+            </button>
+
+          </div>
+
+        </div>
+
 
         {data && (
 
           <div>
 
-            {/* USERNAME */}
-
-            <h2 style={{ fontSize: "36px", fontWeight: "bold" }}>
+            <h2 style={{ fontSize:"36px", textAlign:"center", marginBottom:"40px" }}>
               {data.username}
             </h2>
+
 
             {/* STAT CARDS */}
 
             <div
               style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(4,1fr)",
-                gap: "20px",
-                marginTop: "30px"
+                display:"grid",
+                gridTemplateColumns:"repeat(4,1fr)",
+                gap:"25px",
+                marginBottom:"20px"
               }}
             >
 
-              <StatCard title="Rating" value={data.rating} />
-              <StatCard title="Max Rating" value={data.maxRating} />
-              <StatCard title="Rank" value={data.rank} />
-              <StatCard title="Max Rank" value={data.maxRank} />
+              <StatCard title="Rating" value={data.rating}/>
+              <StatCard title="Max Rating" value={data.maxRating}/>
+              <StatCard title="Rank" value={data.rank}/>
+              <StatCard title="Max Rank" value={data.maxRank}/>
 
             </div>
 
             <div
               style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3,1fr)",
-                gap: "20px",
-                marginTop: "20px"
+                display:"grid",
+                gridTemplateColumns:"repeat(3,1fr)",
+                gap:"25px",
+                marginBottom:"60px"
               }}
             >
 
-              <StatCard title="Solved Problems" value={data.totalSolved} />
-              <StatCard title="Contribution" value={data.contribution} />
-              <StatCard title="Friends" value={data.friendOfCount} />
+              <StatCard title="Solved Problems" value={data.totalSolved}/>
+              <StatCard title="Contribution" value={data.contribution}/>
+              <StatCard title="Friends" value={data.friendOfCount}/>
 
             </div>
 
-            {/* RATING HISTORY GRAPH */}
 
-            <div style={{ marginTop: "50px" }}>
+            {/* RATING HISTORY */}
+
+            <div style={{ marginTop:"40px" }}>
 
               <h3>Rating History</h3>
 
@@ -179,19 +244,19 @@ function CodeforcesDashboard() {
 
                 <LineChart data={ratingHistory}>
 
-                  <CartesianGrid strokeDasharray="3 3" />
+                  <CartesianGrid strokeDasharray="3 3"/>
 
                   <XAxis
                     dataKey="contest"
-                    tick={{ fill: "#ccc", fontSize: 11 }}
+                    tick={{ fill:"#ccc", fontSize:11 }}
                     angle={-30}
                     textAnchor="end"
                     height={60}
                   />
 
-                  <YAxis />
+                  <YAxis tick={{ fill:"#ccc" }}/>
 
-                  <Tooltip />
+                  <Tooltip/>
 
                   <Line
                     type="monotone"
@@ -206,9 +271,10 @@ function CodeforcesDashboard() {
 
             </div>
 
+
             {/* DIVISION PIE CHART */}
 
-            <div style={{ marginTop: "60px" }}>
+            <div style={{ marginTop:"60px" }}>
 
               <h3>Problems Solved by Division</h3>
 
@@ -216,19 +282,15 @@ function CodeforcesDashboard() {
 
                 <PieChart>
 
-                  <Pie
-                    data={pieData}
-                    dataKey="value"
-                    outerRadius={120}
-                  >
+                  <Pie data={pieData} dataKey="value" outerRadius={120}>
 
-                    {pieData.map((entry, index) => (
-                      <Cell key={index} fill={COLORS[index]} />
+                    {pieData.map((entry,index)=>(
+                      <Cell key={index} fill={COLORS[index]}/>
                     ))}
 
                   </Pie>
 
-                  <Tooltip />
+                  <Tooltip/>
 
                 </PieChart>
 
@@ -236,9 +298,10 @@ function CodeforcesDashboard() {
 
             </div>
 
+
             {/* HEATMAP */}
 
-            <div style={{ marginTop: "60px" }}>
+            <div style={{ marginTop:"60px" }}>
 
               <h3>Submission Heatmap</h3>
 
@@ -246,7 +309,7 @@ function CodeforcesDashboard() {
                 startDate={
                   new Date(
                     new Date().setFullYear(
-                      new Date().getFullYear() - 1
+                      new Date().getFullYear()-1
                     )
                   )
                 }
@@ -268,22 +331,25 @@ function CodeforcesDashboard() {
 
 }
 
+
 function StatCard({ title, value }) {
 
   return (
 
     <div
       style={{
-        background: "#1b1b1b",
-        padding: "20px",
-        borderRadius: "12px",
-        textAlign: "center"
+        background:"rgba(255,255,255,0.04)",
+        padding:"22px",
+        borderRadius:"12px",
+        textAlign:"center",
+        border:"1px solid rgba(255,255,255,0.08)",
+        backdropFilter:"blur(10px)"
       }}
     >
 
       <h3>{title}</h3>
 
-      <p style={{ fontSize: "24px", fontWeight: "bold" }}>
+      <p style={{ fontSize:"24px", fontWeight:"bold" }}>
         {value || 0}
       </p>
 

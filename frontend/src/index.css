@@ -9,3 +9,9 @@ html, body, #root {
   height: 100%;
   background: #0f0f0f;
 }
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+
+}

@@ -5,10 +5,8 @@ function Navbar() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-
     localStorage.removeItem("token");
     navigate("/login");
-
   };
 
   return (
@@ -29,6 +27,7 @@ function Navbar() {
     >
 
       {/* Logo */}
+
       <h2
         style={{
           cursor: "pointer",
@@ -40,34 +39,52 @@ function Navbar() {
         AlgoNitro
       </h2>
 
-      {/* Navigation Links */}
+      {/* Navigation Buttons */}
+
       <div
         style={{
           display: "flex",
-          gap: "30px",
-          fontSize: "16px"
+          gap: "15px",
+          fontSize: "15px"
         }}
       >
 
-        <p
+        {/* Dashboard Button */}
+
+        <button
+          onClick={() => navigate("/dashboard")}
           style={{
+            padding: "8px 16px",
+            borderRadius: "8px",
+            border: "1px solid #00ff9c",
+            background: "transparent",
+            color: "#00ff9c",
             cursor: "pointer",
+            fontWeight: "bold",
             transition: "0.2s"
           }}
-          onClick={() => navigate("/dashboard")}
         >
           Dashboard
-        </p>
+        </button>
 
-        <p
+
+        {/* Logout Button */}
+
+        <button
+          onClick={handleLogout}
           style={{
+            padding: "8px 16px",
+            borderRadius: "8px",
+            border: "1px solid #ff4d4d",
+            background: "transparent",
+            color: "#ff4d4d",
             cursor: "pointer",
+            fontWeight: "bold",
             transition: "0.2s"
           }}
-          onClick={handleLogout}
         >
           Logout
-        </p>
+        </button>
 
       </div>
 

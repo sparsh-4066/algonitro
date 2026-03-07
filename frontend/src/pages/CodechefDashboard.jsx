@@ -1,6 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
+import { motion } from "framer-motion";
+import { FaSpinner } from "react-icons/fa";
 
 import {
   LineChart,
@@ -22,8 +24,11 @@ function CodechefDashboard() {
   const [contestHistory, setContestHistory] = useState([]);
   const [heatmap, setHeatmap] = useState([]);
   const [progress, setProgress] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const fetchStats = async () => {
+
+    setLoading(true);
 
     try {
 
@@ -35,8 +40,6 @@ function CodechefDashboard() {
 
       setStats(data);
 
-      /* CONTEST HISTORY GRAPH */
-
       if (data.contestHistory) {
 
         const history = data.contestHistory.map((c) => ({
@@ -46,8 +49,6 @@ function CodechefDashboard() {
 
         setContestHistory(history);
       }
-
-      /* HEATMAP + PROGRESS GRAPH */
 
       if (data.submissions) {
 
@@ -71,6 +72,10 @@ function CodechefDashboard() {
       console.error(error);
       alert("Failed to fetch CodeChef stats");
 
+    } finally {
+
+      setLoading(false);
+
     }
 
   };
@@ -80,83 +85,145 @@ function CodechefDashboard() {
     <div
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg,#0f0f0f,#1a1a1a)",
-        color: "white"
+        background: "linear-gradient(135deg,#0b0b0b,#141414)",
+        color: "white",
+        position: "relative",
+        overflow: "hidden"
       }}
     >
 
+      {/* BACKGROUND LIGHT */}
+
+      <motion.div
+        animate={{ x:[0,250,0], y:[0,200,0] }}
+        transition={{ duration:12, repeat:Infinity }}
+        style={{
+          position:"absolute",
+          width:"900px",
+          height:"900px",
+          background:"#FFA11622",
+          filter:"blur(200px)",
+          top:"-200px",
+          left:"-300px"
+        }}
+      />
+
+      <motion.div
+        animate={{ x:[0,-250,0], y:[0,150,0] }}
+        transition={{ duration:14, repeat:Infinity }}
+        style={{
+          position:"absolute",
+          width:"800px",
+          height:"800px",
+          background:"#C9A27C22",
+          filter:"blur(200px)",
+          bottom:"-200px",
+          right:"-200px"
+        }}
+      />
+
       <Navbar />
 
-      <div style={{ padding: "60px 80px" }}>
+      <div style={{ padding:"60px 80px", position:"relative", zIndex:2 }}>
 
-        <h1 style={{ fontSize: "48px", fontWeight: "bold" }}>
-          CodeChef Analytics
-        </h1>
+        {/* HEADER */}
 
-        {/* USERNAME INPUT */}
+        <div style={{ textAlign:"center", marginBottom:"60px" }}>
 
-        <div style={{ marginTop: "30px", marginBottom: "40px" }}>
+          <h1 style={{ fontSize:"52px", fontWeight:"bold" }}>
+            CodeChef Analytics
+          </h1>
 
-          <input
-            placeholder="Enter CodeChef Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            style={{
-              padding: "12px",
-              width: "260px",
-              marginRight: "10px",
-              borderRadius: "6px"
-            }}
-          />
-
-          <button
-            onClick={fetchStats}
-            style={{
-              padding: "12px 20px",
-              background: "#FFA116",
-              border: "none",
-              borderRadius: "6px",
-              fontWeight: "bold",
-              cursor: "pointer"
-            }}
-          >
-            Fetch Stats
-          </button>
+          <p style={{ color:"#aaa", marginTop:"10px" }}>
+            Analyze CodeChef performance and contest history
+          </p>
 
         </div>
+
+
+        {/* SEARCH BAR */}
+
+        <div
+          style={{
+            display:"flex",
+            justifyContent:"center",
+            marginBottom:"70px"
+          }}
+        >
+
+          <div>
+
+            <input
+              placeholder="Enter CodeChef Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              style={{
+                padding:"12px",
+                width:"260px",
+                marginRight:"10px",
+                borderRadius:"6px",
+                border:"none"
+              }}
+            />
+
+            <button
+              onClick={fetchStats}
+              style={{
+                padding:"12px 22px",
+                background:"#FFA116",
+                border:"none",
+                borderRadius:"6px",
+                fontWeight:"bold",
+                cursor:"pointer"
+              }}
+            >
+
+              {loading ? (
+                <FaSpinner style={{ animation:"spin 1s linear infinite" }} />
+              ) : (
+                "Fetch Stats"
+              )}
+
+            </button>
+
+          </div>
+
+        </div>
+
 
         {stats && (
 
           <div>
 
-            <h2 style={{ fontSize: "36px", fontWeight: "bold" }}>
+            <h2 style={{ fontSize:"36px", textAlign:"center", marginBottom:"40px" }}>
               {username}
             </h2>
+
 
             {/* STAT CARDS */}
 
             <div
               style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(4,1fr)",
-                gap: "20px",
-                marginTop: "30px",
-                marginBottom: "50px"
+                display:"grid",
+                gridTemplateColumns:"repeat(4,1fr)",
+                gap:"25px",
+                marginBottom:"60px"
               }}
             >
 
-              <StatCard title="⭐ Stars" value={stats.stars} />
-              <StatCard title="📈 Rating" value={stats.rating} />
-              <StatCard title="🌍 Global Rank" value={stats.globalRank} />
-              <StatCard title="🇮🇳 Country Rank" value={stats.countryRank} />
+              <StatCard title="⭐ Stars" value={stats.stars}/>
+              <StatCard title="📈 Rating" value={stats.rating}/>
+              <StatCard title="🌍 Global Rank" value={stats.globalRank}/>
+              <StatCard title="🇮🇳 Country Rank" value={stats.countryRank}/>
 
             </div>
 
-            {/* CONTEST RATING HISTORY */}
+
+            {/* CONTEST HISTORY */}
 
             {contestHistory.length > 0 && (
 
-              <div style={{ marginTop: "50px" }}>
+              <div style={{ marginTop:"40px" }}>
 
                 <h3>Contest Rating History</h3>
 
@@ -164,26 +231,26 @@ function CodechefDashboard() {
 
                   <LineChart data={contestHistory}>
 
-                    <CartesianGrid strokeDasharray="3 3" />
+                    <CartesianGrid strokeDasharray="3 3"/>
 
                     <XAxis
                       dataKey="contest"
-                      tick={{ fill: "#ccc", fontSize: 11 }}
+                      tick={{ fill:"#ccc", fontSize:11 }}
                       angle={-30}
                       textAnchor="end"
                       height={60}
                     />
 
                     <YAxis
-                      tick={{ fill: "#ccc" }}
+                      tick={{ fill:"#ccc" }}
                       label={{
-                        value: "Rating",
-                        angle: -90,
-                        position: "insideLeft"
+                        value:"Rating",
+                        angle:-90,
+                        position:"insideLeft"
                       }}
                     />
 
-                    <Tooltip />
+                    <Tooltip/>
 
                     <Line
                       type="monotone"
@@ -200,11 +267,12 @@ function CodechefDashboard() {
 
             )}
 
+
             {/* SUBMISSION PROGRESS */}
 
             {progress.length > 0 && (
 
-              <div style={{ marginTop: "50px" }}>
+              <div style={{ marginTop:"60px" }}>
 
                 <h3>Submission Progress</h3>
 
@@ -212,26 +280,26 @@ function CodechefDashboard() {
 
                   <LineChart data={progress}>
 
-                    <CartesianGrid strokeDasharray="3 3" />
+                    <CartesianGrid strokeDasharray="3 3"/>
 
                     <XAxis
                       dataKey="date"
-                      tick={{ fill: "#ccc", fontSize: 12 }}
+                      tick={{ fill:"#ccc", fontSize:12 }}
                       angle={-30}
                       textAnchor="end"
                       height={60}
                     />
 
                     <YAxis
-                      tick={{ fill: "#ccc" }}
+                      tick={{ fill:"#ccc" }}
                       label={{
-                        value: "Submissions",
-                        angle: -90,
-                        position: "insideLeft"
+                        value:"Submissions",
+                        angle:-90,
+                        position:"insideLeft"
                       }}
                     />
 
-                    <Tooltip />
+                    <Tooltip/>
 
                     <Line
                       type="monotone"
@@ -248,11 +316,12 @@ function CodechefDashboard() {
 
             )}
 
+
             {/* HEATMAP */}
 
             {heatmap.length > 0 && (
 
-              <div style={{ marginTop: "50px" }}>
+              <div style={{ marginTop:"60px" }}>
 
                 <h3>Submission Heatmap</h3>
 
@@ -260,7 +329,7 @@ function CodechefDashboard() {
                   startDate={
                     new Date(
                       new Date().setFullYear(
-                        new Date().getFullYear() - 1
+                        new Date().getFullYear()-1
                       )
                     )
                   }
@@ -284,6 +353,7 @@ function CodechefDashboard() {
 
 }
 
+
 /* STAT CARD */
 
 function StatCard({ title, value }) {
@@ -292,16 +362,18 @@ function StatCard({ title, value }) {
 
     <div
       style={{
-        background: "#1b1b1b",
-        padding: "20px",
-        borderRadius: "12px",
-        textAlign: "center"
+        background:"rgba(255,255,255,0.04)",
+        padding:"22px",
+        borderRadius:"12px",
+        textAlign:"center",
+        border:"1px solid rgba(255,255,255,0.08)",
+        backdropFilter:"blur(10px)"
       }}
     >
 
       <h3>{title}</h3>
 
-      <p style={{ fontSize: "24px", fontWeight: "bold" }}>
+      <p style={{ fontSize:"24px", fontWeight:"bold" }}>
         {value}
       </p>
 
