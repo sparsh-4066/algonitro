@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import API from "../services/api.js";
 import Navbar from "../components/Navbar";
 import { motion } from "framer-motion";
 import { FaSpinner } from "react-icons/fa";
@@ -37,9 +37,7 @@ function LeetcodeDashboard() {
 
     try {
 
-      const res = await axios.get(
-        `http://localhost:5000/api/leetcode/${username}`
-      );
+      const res = await API.get(`/leetcode/${username}`);
 
       const data = res.data;
 
@@ -111,8 +109,6 @@ function LeetcodeDashboard() {
       }}
     >
 
-      {/* BACKGROUND GLOW */}
-
       <motion.div
         animate={{ x:[0,250,0], y:[0,200,0] }}
         transition={{ duration:10, repeat:Infinity }}
@@ -145,8 +141,6 @@ function LeetcodeDashboard() {
 
       <div style={{ padding:"60px 80px", position:"relative", zIndex:2 }}>
 
-        {/* HEADER */}
-
         <div style={{ textAlign:"center", marginBottom:"60px" }}>
 
           <h1 style={{ fontSize:"52px", fontWeight:"bold" }}>
@@ -158,8 +152,6 @@ function LeetcodeDashboard() {
           </p>
 
         </div>
-
-        {/* SEARCH */}
 
         <div
           style={{
@@ -209,7 +201,6 @@ function LeetcodeDashboard() {
 
         </div>
 
-
         {stats && (
 
           <div>
@@ -217,8 +208,6 @@ function LeetcodeDashboard() {
             <h2 style={{ fontSize:"36px", textAlign:"center", marginBottom:"30px" }}>
               {username}
             </h2>
-
-            {/* STAT CARDS */}
 
             <div
               style={{
@@ -235,8 +224,6 @@ function LeetcodeDashboard() {
               <StatCard title="Hard" value={stats[3]?.count}/>
 
             </div>
-
-            {/* PIE CHART */}
 
             <h3 style={{ marginBottom:"20px" }}>
               Difficulty Distribution
@@ -259,8 +246,6 @@ function LeetcodeDashboard() {
               </PieChart>
 
             </ResponsiveContainer>
-
-            {/* CONTEST STATS */}
 
             {contest && (
 
@@ -296,8 +281,6 @@ function LeetcodeDashboard() {
               </div>
 
             )}
-
-            {/* CONTEST RATING HISTORY */}
 
             {contestHistory.length>0 && (
 
@@ -338,8 +321,6 @@ function LeetcodeDashboard() {
 
             )}
 
-            {/* SUBMISSION PROGRESS */}
-
             <div style={{ marginTop:"60px" }}>
 
               <h3>Submission Progress</h3>
@@ -374,8 +355,6 @@ function LeetcodeDashboard() {
               </ResponsiveContainer>
 
             </div>
-
-            {/* HEATMAP */}
 
             <div style={{ marginTop:"60px" }}>
 
