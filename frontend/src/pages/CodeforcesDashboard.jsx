@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import API from "../api";
 import Navbar from "../components/Navbar";
 import { motion } from "framer-motion";
 import { FaSpinner } from "react-icons/fa";
@@ -34,9 +34,7 @@ function CodeforcesDashboard() {
 
     try {
 
-      const res = await axios.get(
-        `http://localhost:5000/api/codeforces/${username}`
-      );
+      const res = await API.get(`/codeforces/${username}`);
 
       const stats = res.data;
 
@@ -56,8 +54,9 @@ function CodeforcesDashboard() {
 
       setHeatmapData(heatmap);
 
-    } catch {
+    } catch (err) {
 
+      console.error(err);
       alert("Failed to fetch Codeforces stats");
 
     } finally {
@@ -139,7 +138,6 @@ function CodeforcesDashboard() {
 
         </div>
 
-
         {/* SEARCH */}
 
         <div
@@ -190,7 +188,6 @@ function CodeforcesDashboard() {
 
         </div>
 
-
         {data && (
 
           <div>
@@ -198,7 +195,6 @@ function CodeforcesDashboard() {
             <h2 style={{ fontSize:"36px", textAlign:"center", marginBottom:"40px" }}>
               {data.username}
             </h2>
-
 
             {/* STAT CARDS */}
 
@@ -232,7 +228,6 @@ function CodeforcesDashboard() {
               <StatCard title="Friends" value={data.friendOfCount}/>
 
             </div>
-
 
             {/* RATING HISTORY */}
 
@@ -271,7 +266,6 @@ function CodeforcesDashboard() {
 
             </div>
 
-
             {/* DIVISION PIE CHART */}
 
             <div style={{ marginTop:"60px" }}>
@@ -297,7 +291,6 @@ function CodeforcesDashboard() {
               </ResponsiveContainer>
 
             </div>
-
 
             {/* HEATMAP */}
 
@@ -330,7 +323,6 @@ function CodeforcesDashboard() {
   );
 
 }
-
 
 function StatCard({ title, value }) {
 
