@@ -54,6 +54,7 @@ function Login() {
             value={email}
             onChange={(e)=>setEmail(e.target.value)}
             style={styles.input}
+            autoComplete="off"
             required
           />
 
@@ -63,6 +64,7 @@ function Login() {
             value={password}
             onChange={(e)=>setPassword(e.target.value)}
             style={styles.input}
+            autoComplete="new-password"
             required
           />
 

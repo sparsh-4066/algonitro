@@ -54,6 +54,7 @@ function Register() {
             value={name}
             onChange={(e)=>setName(e.target.value)}
             style={styles.input}
+            autoComplete="off"
             required
           />
 
@@ -63,6 +64,7 @@ function Register() {
             value={email}
             onChange={(e)=>setEmail(e.target.value)}
             style={styles.input}
+            autoComplete="off"
             required
           />
 
@@ -72,6 +74,7 @@ function Register() {
             value={password}
             onChange={(e)=>setPassword(e.target.value)}
             style={styles.input}
+            autoComplete="new-password"
             required
           />
 

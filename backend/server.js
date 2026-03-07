@@ -5,36 +5,48 @@ import dotenv from "dotenv";
 
 import leetcodeRoutes from "./routes/leetcodeRoutes.js";
 import codeforcesRoutes from "./routes/codeforcesRoutes.js";
-import codechefRoutes from "./routes/codechefRoutes.js";   // ✅ NEW
+import codechefRoutes from "./routes/codechefRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
 
 const app = express();
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+/* -------------------- MIDDLEWARE -------------------- */
 
-// Routes
+app.use(cors()); // Enable CORS for frontend (Vercel)
+app.use(express.json()); // Parse JSON body
+
+
+/* -------------------- ROUTES -------------------- */
+
 app.use("/api/auth", authRoutes);
 app.use("/api/leetcode", leetcodeRoutes);
 app.use("/api/codeforces", codeforcesRoutes);
-app.use("/api/codechef", codechefRoutes);   // ✅ NEW
+app.use("/api/codechef", codechefRoutes);
 
-// Test Route
+
+/* -------------------- TEST ROUTE -------------------- */
+
 app.get("/", (req, res) => {
   res.send("AlgoNitro API Running 🚀");
 });
 
-// MongoDB Connection
+
+/* -------------------- SERVER PORT -------------------- */
+
+const PORT = process.env.PORT || 5000;
+
+
+/* -------------------- MONGODB CONNECTION -------------------- */
+
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("MongoDB Connected");
 
-    app.listen(5000, () => {
-      console.log("Server running on port 5000");
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
     });
   })
   .catch((err) => {

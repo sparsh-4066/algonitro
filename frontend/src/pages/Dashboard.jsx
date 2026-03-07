@@ -115,7 +115,7 @@ function Dashboard() {
             letterSpacing:"1px"
           }}
         >
-          AlgoNitro Dashboard
+          AlgoNitro Exchange
         </h1>
 
         <p
