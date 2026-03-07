@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import API from "../services/api.js";
 import Navbar from "../components/Navbar";
 import { motion } from "framer-motion";
 import { FaSpinner } from "react-icons/fa";
@@ -32,9 +32,7 @@ function CodechefDashboard() {
 
     try {
 
-      const res = await axios.get(
-        `http://localhost:5000/api/codechef/${username}`
-      );
+      const res = await API.get(`/codechef/${username}`);
 
       const data = res.data;
 
@@ -92,8 +90,6 @@ function CodechefDashboard() {
       }}
     >
 
-      {/* BACKGROUND LIGHT */}
-
       <motion.div
         animate={{ x:[0,250,0], y:[0,200,0] }}
         transition={{ duration:12, repeat:Infinity }}
@@ -126,8 +122,6 @@ function CodechefDashboard() {
 
       <div style={{ padding:"60px 80px", position:"relative", zIndex:2 }}>
 
-        {/* HEADER */}
-
         <div style={{ textAlign:"center", marginBottom:"60px" }}>
 
           <h1 style={{ fontSize:"52px", fontWeight:"bold" }}>
@@ -139,9 +133,6 @@ function CodechefDashboard() {
           </p>
 
         </div>
-
-
-        {/* SEARCH BAR */}
 
         <div
           style={{
@@ -190,7 +181,6 @@ function CodechefDashboard() {
 
         </div>
 
-
         {stats && (
 
           <div>
@@ -198,9 +188,6 @@ function CodechefDashboard() {
             <h2 style={{ fontSize:"36px", textAlign:"center", marginBottom:"40px" }}>
               {username}
             </h2>
-
-
-            {/* STAT CARDS */}
 
             <div
               style={{
@@ -217,9 +204,6 @@ function CodechefDashboard() {
               <StatCard title="🇮🇳 Country Rank" value={stats.countryRank}/>
 
             </div>
-
-
-            {/* CONTEST HISTORY */}
 
             {contestHistory.length > 0 && (
 
@@ -267,9 +251,6 @@ function CodechefDashboard() {
 
             )}
 
-
-            {/* SUBMISSION PROGRESS */}
-
             {progress.length > 0 && (
 
               <div style={{ marginTop:"60px" }}>
@@ -316,9 +297,6 @@ function CodechefDashboard() {
 
             )}
 
-
-            {/* HEATMAP */}
-
             {heatmap.length > 0 && (
 
               <div style={{ marginTop:"60px" }}>
@@ -352,9 +330,6 @@ function CodechefDashboard() {
   );
 
 }
-
-
-/* STAT CARD */
 
 function StatCard({ title, value }) {
 
