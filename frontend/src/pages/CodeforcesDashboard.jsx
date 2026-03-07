@@ -1,5 +1,5 @@
 import { useState } from "react";
-import API from "../api";
+import API from "../api.js";
 import Navbar from "../components/Navbar";
 import { motion } from "framer-motion";
 import { FaSpinner } from "react-icons/fa";
